@@ -32,7 +32,7 @@ submitPlace.submit()
 
 sleep(3)
 
-#Browsing
+#Changing tabs
 Bolsas = browser.find_element(By.LINK_TEXT,'Bolsas Institucionais')
 Bolsas.click()
 
@@ -56,6 +56,7 @@ sleep(3)
 excel_path = 'Database/schedules.xlsx'
 data = pd.read_excel(excel_path)
 
+#Insert data
 for index, row in data.iterrows():
     
     row_number = index + 1
@@ -84,6 +85,10 @@ for index, row in data.iterrows():
     insertNewDate = browser.find_element(By.CLASS_NAME,'adicionar')
     insertNewDate.click()
 
-    sleep(3)
+    sleep(2)
+
+#Saving changes
+save = browser.find_element(By.NAME,'alterar')
+save.click
 
 browser.quit()
