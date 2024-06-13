@@ -3,9 +3,6 @@ from dotenv import load_dotenv
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from time import sleep
 
 browser = webdriver.Firefox()
@@ -13,7 +10,7 @@ browser = webdriver.Firefox()
 #Open Browswer
 browser.get('https://sig.ufla.br/modulos/login/index.php')
 
-sleep(3)
+sleep(2)
 
 #Login
 load_dotenv()
@@ -30,18 +27,18 @@ passPlace.send_keys(userPass)
 submitPlace = browser.find_element(By.ID,'entrar')
 submitPlace.submit()
 
-sleep(3)
+sleep(2)
 
 #Changing tabs
 Bolsas = browser.find_element(By.LINK_TEXT,'Bolsas Institucionais')
 Bolsas.click()
 
-sleep(3)
+sleep(2)
 
 Relatorio = browser.find_element(By.XPATH, '//a[@title="Relatório Mensal de Atividades"]')
 Relatorio.click()
     
-sleep(3)
+sleep(2)
 
 #Open report
 month = 'Julho'
@@ -50,11 +47,10 @@ xpath = f"//tr[td[text()='{month}']]//a[@title='Definir Atividades do Bolsista I
 defineActivities = browser.find_element(By.XPATH, xpath)
 defineActivities.click()
 
-sleep(3)
+sleep(2)
 
 #Read xlsx
-excel_path = 'Database/schedules.xlsx'
-data = pd.read_excel(excel_path)
+data = pd.read_excel('Database/schedules.xlsx')
 
 #Insert data
 for index, row in data.iterrows():
@@ -76,19 +72,23 @@ for index, row in data.iterrows():
     place = browser.find_element(By.XPATH, xpath_place)
     description = browser.find_element(By.XPATH, xpath_description)
     
-    day.send_keys(row['Day'])
+    #zfill is used to guarantee that the date will have two digits
+    day.send_keys(str(row['Day']).zfill(2))
     init_hour.send_keys(row['InitHour'].strftime('%H:%M'))
     end_hour.send_keys(row['EndHour'].strftime('%H:%M'))
     place.send_keys(row['Place'])
     description.send_keys(row['Description'])
     
-    insertNewDate = browser.find_element(By.CLASS_NAME,'adicionar')
-    insertNewDate.click()
+    if(index < len(data)-1):
+        insertNewDate = browser.find_element(By.CLASS_NAME,'adicionar')
+        insertNewDate.click()
 
     sleep(2)
 
 #Saving changes
 save = browser.find_element(By.NAME,'alterar')
-save.click
+save.click()
+
+sleep(2)
 
 browser.quit()
