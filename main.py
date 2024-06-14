@@ -5,6 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 
+#The month need to be in portuguese and start with a capital letter
+month = 'Julho'
+
 browser = webdriver.Firefox()
 
 #Open Browswer
@@ -41,7 +44,6 @@ Relatorio.click()
 sleep(2)
 
 #Open report
-month = 'Julho'
 
 xpath = f"//tr[td[text()='{month}']]//a[@title='Definir Atividades do Bolsista Institucional']"
 defineActivities = browser.find_element(By.XPATH, xpath)
